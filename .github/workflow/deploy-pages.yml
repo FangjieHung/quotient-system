@@ -1,13 +1,13 @@
-name: Deploy to GitHub Pages
+name: Deploy Angular to GitHub Pages
 
 on:
   push:
-    branches: [main] # 換成你的主分支名稱
-  workflow_dispatch: # 手動觸發
+    branches: [main] # 如果你的主分支不是 main，改這裡
+  workflow_dispatch: # 允許手動觸發
 
 permissions:
   contents: read
-  pages: write # 讓 actions/deploy-pages 可以發佈
+  pages: write
   id-token: write
 
 concurrency:
@@ -25,26 +25,44 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
-        # 如果你的專案使用 pnpm / yarn，改為：
-        # uses: pnpm/action-setup@v3  /  yarn install --frozen-lockfile
 
-      # 如果你的專案需要設定基底路徑（放在子路徑），可在這裡依需求寫入環境變數
-      # 例如 Vite：VITE_BASE=/your-repo-name/；React 需設定 homepage；Vue 需設 publicPath
-
-      - name: Build
+      # 重要：設定 base-href 讓 GitHub Pages 子路徑能正確載入資源
+      - name: Build Angular
         run: |
-          # 設定 Base Href 以符合 GitHub Pages 的路徑結構
-          npm run build -- --base-href /${{ github.event.repository.name }}/
+          # 若你在 package.json 的 build 已經包含 --configuration=production 就不需要再加
+          # 注意：把 <repo-name> 改成你的實際 repo 名
+          npm run build -- --base-href "/quotient-system/"
+
+      # SPA 404 重導到 index.html，避免子路徑重新整理 404（Angular Router 預設 PathLocationStrategy）
+      - name: Add SPA 404 redirect
+        run: |
+          # 嘗試常見輸出路徑（Angular 17+ 使用 dist/<project>/browser）
+          OUT=""
+          if [ -d "dist" ]; then
+            if compgen -G "dist/*/browser" > /dev/null; then
+              OUT=$(echo dist/*/browser)
+            elif compgen -G "dist/*" > /dev/null; then
+              OUT=$(echo dist/*)
+            fi
+          fi
+          echo "Resolved output dir: $OUT"
+          if [ -z "$OUT" ]; then
+            echo "❌ 無法找到打包輸出資料夾，請確認 build 指令或 angular.json 的 outputPath"
+            exit 1
+          fi
+          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=./index.html"></head><body></body></html>' > "$OUT/404.html"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Angular 預設建置輸出路徑通常為 dist/<project-name>/browser
-          path: ./dist/quotient-system/browser
+          # 同步使用上面自動偵測到的輸出資料夾
+          path: |
+            dist/*/browser
+            dist/*
 
   deploy:
     environment:
