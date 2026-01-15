@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main] # 換成你的主分支名稱
+  workflow_dispatch: # 手動觸發
+
+permissions:
+  contents: read
+  pages: write # 讓 actions/deploy-pages 可以發佈
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        # 如果你的專案使用 pnpm / yarn，改為：
+        # uses: pnpm/action-setup@v3  /  yarn install --frozen-lockfile
+
+      # 如果你的專案需要設定基底路徑（放在子路徑），可在這裡依需求寫入環境變數
+      # 例如 Vite：VITE_BASE=/your-repo-name/；React 需設定 homepage；Vue 需設 publicPath
+
+      - name: Build
+        run: |
+          # 設定 Base Href 以符合 GitHub Pages 的路徑結構
+          npm run build -- --base-href /${{ github.event.repository.name }}/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Angular 預設建置輸出路徑通常為 dist/<project-name>/browser
+          path: ./dist/quotient-system/browser
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
