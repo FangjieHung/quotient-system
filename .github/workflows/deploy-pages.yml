@@ -2,8 +2,8 @@ name: Deploy Angular to GitHub Pages
 
 on:
   push:
-    branches: [main] # 如果你的主分支不是 main，改這裡
-  workflow_dispatch: # 允許手動觸發
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,34 +24,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: npm
+          node-version: '20.19.0' # 或 '22.12.0'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      # 重要：設定 base-href 讓 GitHub Pages 子路徑能正確載入資源
-      - name: Build Angular
+      # 設定 base-href 指向 GitHub Pages 子路徑：/quotient-system/
+      - name: Build Angular (set base-href)
         run: |
-          # 若你在 package.json 的 build 已經包含 --configuration=production 就不需要再加
-          # 注意：把 <repo-name> 改成你的實際 repo 名
           npm run build -- --base-href "/quotient-system/"
 
-      # SPA 404 重導到 index.html，避免子路徑重新整理 404（Angular Router 預設 PathLocationStrategy）
+      # 為 SPA 加入 404.html 轉回 index.html，避免子路徑重新整理 404
       - name: Add SPA 404 redirect
         run: |
-          # 嘗試常見輸出路徑（Angular 17+ 使用 dist/<project>/browser）
           OUT=""
-          if [ -d "dist" ]; then
-            if compgen -G "dist/*/browser" > /dev/null; then
-              OUT=$(echo dist/*/browser)
-            elif compgen -G "dist/*" > /dev/null; then
-              OUT=$(echo dist/*)
-            fi
+          if compgen -G "dist/*/browser" > /dev/null; then
+            OUT=$(echo dist/*/browser)
+          elif compgen -G "dist/*" > /dev/null; then
+            OUT=$(echo dist/*)
           fi
           echo "Resolved output dir: $OUT"
           if [ -z "$OUT" ]; then
-            echo "❌ 無法找到打包輸出資料夾，請確認 build 指令或 angular.json 的 outputPath"
+            echo "❌ 無法找到打包輸出資料夾，請檢查 angular.json 的 outputPath 或 build 指令"
             exit 1
           fi
           echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=./index.html"></head><body></body></html>' > "$OUT/404.html"
@@ -59,7 +54,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 同步使用上面自動偵測到的輸出資料夾
+          # 同時涵蓋 Angular 17+ 的 dist/<project>/browser 與舊版 dist/<project>
           path: |
             dist/*/browser
             dist/*
