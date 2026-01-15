@@ -34,8 +34,9 @@ jobs:
       - name: Build Angular (set base-href & output-path)
         run: |
           npm run build -- \
+          --configuration production \
             --base-href "/quotient-system/" \
-            --configuration production \
+            --deploy-url "/quotient-system/" \
             --output-path dist/quotient-system/browser
 
       # 放入 SPA 404 重導，避免子路徑重新整理 404
