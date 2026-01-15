@@ -1,8 +1,8 @@
 <div class="container mx-auto">
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h2 class="text-3xl font-bold text-primaryText">Projects</h2>
-            <p class="text-gray-500 mt-1">Track progress and manage deliverables.</p>
+            <h2 class="text-3xl font-bold text-primaryText">專案列表</h2>
+            <p class="text-gray-500 mt-1">追蹤進度與管理交付項目。</p>
         </div>
         <!-- Action button could be "Add Project" but usually projects come from quotations -->
     </div>
@@ -33,7 +33,7 @@
 
             <div class="mb-6">
                 <div class="flex justify-between text-xs font-bold text-gray-500 mb-2">
-                    <span>Progress</span>
+                    <span>進度</span>
                     <span>{{ project.completionPercentage }}%</span>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
@@ -44,11 +44,11 @@
 
             <div class="flex justify-between items-center pt-4 border-t border-gray-50">
                 <div class="text-xs text-gray-400">
-                    <p class="font-bold">Start Date</p>
+                    <p class="font-bold">開始日期</p>
                     <p>{{ project.startDate | date:'mediumDate' }}</p>
                 </div>
                 <div class="text-xs text-gray-400 text-right">
-                    <p class="font-bold">Budget</p>
+                    <p class="font-bold">預算</p>
                     <p class="text-primaryText font-bold">{{ project.budget | currency }}</p>
                 </div>
             </div>

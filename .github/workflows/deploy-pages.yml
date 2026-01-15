@@ -24,40 +24,30 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.19.0' # 或 '22.12.0'
+          node-version: '20.19.0' # Angular 21 要求 Node 20.19+ 或 22.12+
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      # 設定 base-href 指向 GitHub Pages 子路徑：/quotient-system/
-      - name: Build Angular (set base-href)
+      # 用 --output-path 指定固定輸出資料夾，避免不確定的 dist 結構
+      - name: Build Angular (set base-href & output-path)
         run: |
-          npm run build -- --base-href "/quotient-system/"
+          npm run build -- \
+            --base-href "/quotient-system/" \
+            --configuration production \
+            --output-path dist/quotient-system/browser
 
-      # 為 SPA 加入 404.html 轉回 index.html，避免子路徑重新整理 404
+      # 放入 SPA 404 重導，避免子路徑重新整理 404
       - name: Add SPA 404 redirect
         run: |
-          OUT=""
-          if compgen -G "dist/*/browser" > /dev/null; then
-            OUT=$(echo dist/*/browser)
-          elif compgen -G "dist/*" > /dev/null; then
-            OUT=$(echo dist/*)
-          fi
-          echo "Resolved output dir: $OUT"
-          if [ -z "$OUT" ]; then
-            echo "❌ 無法找到打包輸出資料夾，請檢查 angular.json 的 outputPath 或 build 指令"
-            exit 1
-          fi
-          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=./index.html"></head><body></body></html>' > "$OUT/404.html"
+          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=./index.html"></head><body></body></html>' \
+            > dist/quotient-system/browser/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 同時涵蓋 Angular 17+ 的 dist/<project>/browser 與舊版 dist/<project>
-          path: |
-            dist/*/browser
-            dist/*
+          path: dist/quotient-system/browser # ✅ 寫死為存在的資料夾
 
   deploy:
     environment:

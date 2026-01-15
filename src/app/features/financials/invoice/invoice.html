@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="text-right">
-                <h1 class="text-4xl font-bold text-gray-200 uppercase tracking-widest mb-2">Invoice</h1>
+                <h1 class="text-4xl font-bold text-gray-200 uppercase tracking-widest mb-2">發票</h1>
                 <p class="font-bold text-gray-800">#{{ invoiceId }}</p>
             </div>
         </div>
@@ -22,14 +22,14 @@
         <!-- Addresses -->
         <div class="flex justify-between mb-12">
             <div>
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">From</h3>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">寄件人</h3>
                 <p class="font-bold text-gray-800">Quotient Inc.</p>
                 <p class="text-gray-600">123 Business Rd</p>
                 <p class="text-gray-600">Tech City, TC 90210</p>
                 <p class="text-gray-600">billing@quotient.com</p>
             </div>
             <div class="text-right">
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Bill To</h3>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">帳單寄送至</h3>
                 <p class="font-bold text-gray-800">{{ project.clientName }}</p>
                 <p class="text-gray-600">Attn: Accounts Payable</p>
             </div>
@@ -39,11 +39,11 @@
         <div
             class="grid grid-cols-2 gap-8 mb-12 bg-gray-50 p-6 rounded-xl print:bg-transparent print:p-0 print:border-b print:border-gray-200">
             <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Issue Date</p>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">開立日期</p>
                 <p class="font-bold text-gray-800">{{ date | date:'mediumDate' }}</p>
             </div>
             <div class="text-right">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Due Date</p>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">到期日</p>
                 <p class="font-bold text-gray-800">{{ dueDate | date:'mediumDate' }}</p>
             </div>
         </div>
@@ -52,9 +52,9 @@
         <table class="w-full mb-12">
             <thead>
                 <tr class="border-b-2 border-sidebar print:border-gray-800">
-                    <th class="text-left py-3 font-bold text-gray-800">Description</th>
-                    <th class="text-center py-3 font-bold text-gray-800 w-24">Qty</th>
-                    <th class="text-right py-3 font-bold text-gray-800 w-32">Amount</th>
+                    <th class="text-left py-3 font-bold text-gray-800">項目說明</th>
+                    <th class="text-center py-3 font-bold text-gray-800 w-24">數量</th>
+                    <th class="text-right py-3 font-bold text-gray-800 w-32">金額</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -74,15 +74,15 @@
         <div class="flex justify-end mb-12">
             <div class="w-64">
                 <div class="flex justify-between py-2 border-b border-gray-100">
-                    <span class="text-gray-600">Subtotal</span>
+                    <span class="text-gray-600">小計</span>
                     <span class="font-bold text-gray-800">{{ project.budget | currency }}</span>
                 </div>
                 <div class="flex justify-between py-2 border-b border-gray-100">
-                    <span class="text-gray-600">Tax (0%)</span>
+                    <span class="text-gray-600">稅額 (0%)</span>
                     <span class="font-bold text-gray-800">$0.00</span>
                 </div>
                 <div class="flex justify-between py-4">
-                    <span class="font-bold text-lg text-sidebar print:text-gray-800">Total</span>
+                    <span class="font-bold text-lg text-sidebar print:text-gray-800">總計</span>
                     <span class="font-bold text-2xl text-sidebar print:text-gray-800">{{ project.budget | currency
                         }}</span>
                 </div>
@@ -92,19 +92,19 @@
         <!-- Payment Info -->
         <div
             class="bg-blue-50 p-6 rounded-xl border border-blue-100 print:bg-transparent print:border print:border-gray-200">
-            <h3 class="font-bold text-sidebar mb-2 print:text-gray-800">Payment Instructions</h3>
-            <p class="text-sm text-gray-600 mb-1">Please include Invoice #{{ invoiceId }} in the payment reference.</p>
-            <p class="text-sm text-gray-600">Bank Transfer: Tech Bank | Account: 123-456-7890</p>
+            <h3 class="font-bold text-sidebar mb-2 print:text-gray-800">付款說明</h3>
+            <p class="text-sm text-gray-600 mb-1">匯款時請備註發票號碼 #{{ invoiceId }}。</p>
+            <p class="text-sm text-gray-600">銀行轉帳: Tech Bank | 帳號: 123-456-7890</p>
         </div>
 
         <!-- Print Actions -->
         <div class="flex justify-end gap-4 mt-12 print:hidden">
             <a routerLink="/projects/{{project.id}}"
-                class="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors">Back</a>
+                class="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors">返回</a>
             <button (click)="print()"
                 class="bg-accent text-primaryText px-8 py-3 rounded-xl font-bold hover:brightness-105 transition-all flex items-center gap-2">
                 <span class="material-symbols-outlined">print</span>
-                Print Invoice
+                列印發票
             </button>
         </div>
     </div>
