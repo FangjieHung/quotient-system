@@ -24,29 +24,45 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.19.0' # Angular 21 要求 Node 20.19+ 或 22.12+
+          node-version: '20.19.0' # Angular 21 需求
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      # 用 --output-path 指定固定輸出資料夾，避免不確定的 dist 結構
-      - name: Build Angular (set base-href & output-path)
+      # 1) 同時設定 base-href 與 deploy-url，確保子路徑資源正確
+      - name: Build Angular (set base-href & deploy-url)
         run: |
           npm run build -- \
-          --configuration production \
+            --configuration production \
             --base-href "/quotient-system/" \
-            --deploy-url "/quotient-system/" \
-            --output-path dist/quotient-system/browser
+            --deploy-url "/quotient-system/"
 
+      # 2) 自動偵測實際輸出資料夾（找出包含 index.html 的資料夾）
+      - name: Resolve dist output directory
+        id: outdir
+        run: |
+          set -e
+          echo "== Dist tree (top 2 levels) =="
+          find dist -maxdepth 3 -type d -print || true
+          INDEX_HTML=$(find dist -type f -name index.html | head -n 1 || true)
+          if [ -z "$INDEX_HTML" ]; then
+            echo "❌ 沒找到 dist/**/index.html，請檢查 build 是否成功"
+            exit 1
+          fi
+          OUTPUT_DIR=$(dirname "$INDEX_HTML")
+          echo "Resolved OUTPUT_DIR: $OUTPUT_DIR"
+          echo "OUTPUT_DIR=$OUTPUT_DIR" >> $GITHUB_ENV
+
+      # 3) 用「拷貝」方式讓 404 也回 app shell（避免轉址閃爍/白屏）
       - name: Make 404 serve the SPA shell
         run: |
-          cp dist/quotient-system/browser/index.html dist/quotient-system/browser/404.html
+          cp "${{ env.OUTPUT_DIR }}/index.html" "${{ env.OUTPUT_DIR }}/404.html"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/quotient-system/browser
+          path: ${{ env.OUTPUT_DIR }}
 
   deploy:
     environment:
