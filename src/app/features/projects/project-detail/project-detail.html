@@ -1,0 +1,106 @@
+<div class="container mx-auto" *ngIf="project">
+    <div class="mb-8 flex items-center gap-4">
+        <a routerLink="/projects"
+            class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-sidebar hover:border-sidebar transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h2 class="text-3xl font-bold text-primaryText">{{ project.title }}</h2>
+            <p class="text-gray-500 mt-1">{{ project.clientName }}</p>
+        </div>
+        <div class="ml-auto">
+            <span class="px-4 py-2 rounded-full font-bold text-sm" [ngClass]="{
+                        'bg-blue-50 text-blue-600': project.status === 'In Progress',
+                        'bg-green-50 text-green-600': project.status === 'Completed',
+                        'bg-yellow-50 text-yellow-600': project.status === 'On Hold',
+                        'bg-red-50 text-red-500': project.status === 'Cancelled'
+                    }">
+                {{ project.status }}
+            </span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Info -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <h3 class="text-xl font-bold text-primaryText mb-6">Project Overview</h3>
+                <p class="text-gray-600 leading-relaxed mb-6">{{ project.description }}</p>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Start Date</p>
+                        <p class="font-medium text-primaryText">{{ project.startDate | date:'mediumDate' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">End Date</p>
+                        <p class="font-medium text-primaryText">{{ project.endDate ? (project.endDate |
+                            date:'mediumDate') : 'TBD' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks / Milestones (Placeholder) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-primaryText">Milestones</h3>
+                    <button class="text-sm font-bold text-sidebar hover:text-opacity-80">View All</button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                        <div
+                            class="w-6 h-6 rounded-full border-2 border-green-500 flex items-center justify-center bg-green-500 text-white text-xs">
+                            <span class="material-symbols-outlined text-sm">check</span>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-700 decoration-slate-400 line-through">Project Kickoff</p>
+                        </div>
+                        <span class="text-xs font-medium text-gray-400">Oct 20</span>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-300"></div>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-700">Design Mockups</p>
+                        </div>
+                        <span class="text-xs font-medium text-gray-400">Nov 05</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Actions -->
+        <div class="space-y-6">
+            <!-- Budget Card -->
+            <div class="bg-sidebar text-white rounded-2xl shadow-lg p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10"></div>
+                <p class="text-white/60 text-sm font-bold uppercase tracking-wider mb-2">Total Budget</p>
+                <h3 class="text-3xl font-bold mb-6">{{ project.budget | currency }}</h3>
+
+                <div class="mb-2 flex justify-between text-xs font-medium">
+                    <span>completion</span>
+                    <span>{{ project.completionPercentage }}%</span>
+                </div>
+                <div class="w-full bg-black/20 rounded-full h-2 overflow-hidden">
+                    <div class="bg-accent h-2 rounded-full" [style.width.%]="project.completionPercentage"></div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Financial Actions</h3>
+                <div class="space-y-3">
+                    <button (click)="generatePaymentSlip()"
+                        class="w-full py-3 px-4 rounded-xl border-2 border-sidebar text-sidebar font-bold hover:bg-sidebar hover:text-white transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">receipt_long</span>
+                        Generate Payment Slip
+                    </button>
+                    <button (click)="generateInvoice()"
+                        class="w-full py-3 px-4 rounded-xl bg-accent text-primaryText font-bold hover:brightness-105 transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">request_quote</span>
+                        Generate Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<div class="container mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-3xl font-bold text-primaryText">Quotations</h2>
+            <p class="text-gray-500 mt-1">Manage your project proposals and estimates.</p>
+        </div>
+        <a routerLink="/quotations/new"
+            class="bg-sidebar hover:bg-opacity-90 text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all shadow-sm">
+            <span class="material-symbols-outlined">add</span>
+            New Quotation
+        </a>
+    </div>
+
+    <!-- Stats Cards (Optional for Dashboard feel) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start justify-between">
+            <div>
+                <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Total Active</p>
+                <h3 class="text-2xl font-bold text-sidebar mt-1">12</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                <span class="material-symbols-outlined">analytics</span>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start justify-between">
+            <div>
+                <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Pending Approval</p>
+                <h3 class="text-2xl font-bold text-accent mt-1">4</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-accent">
+                <span class="material-symbols-outlined">pending</span>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start justify-between">
+            <div>
+                <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Revenue Potential</p>
+                <h3 class="text-2xl font-bold text-green-600 mt-1">$45k</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-500">
+                <span class="material-symbols-outlined">attach_money</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quotations Table -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b border-gray-100">
+                <tr>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Client</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Project</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Amount</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                <tr *ngFor="let quote of quotations" class="hover:bg-gray-50 transition-colors group">
+                    <td class="px-6 py-4 font-medium text-sidebar">
+                        {{ quote.id }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-primaryText">{{ quote.clientName }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ quote.projectTitle }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500 text-sm">
+                        {{ quote.date | date:'mediumDate' }}
+                    </td>
+                    <td class="px-6 py-4 font-bold text-primaryText">
+                        {{ quote.amount | currency }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold" [ngClass]="{
+                                'bg-gray-100 text-gray-500': quote.status === 'Draft',
+                                'bg-blue-50 text-blue-500': quote.status === 'Sent',
+                                'bg-green-50 text-green-600': quote.status === 'Accepted',
+                                'bg-red-50 text-red-500': quote.status === 'Rejected'
+                            }">
+                            {{ quote.status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-gray-400 hover:text-sidebar transition-colors">
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Empty State (if needed) -->
+        <div *ngIf="quotations.length === 0" class="p-10 text-center text-gray-400">
+            <span class="material-symbols-outlined text-4xl mb-2 text-gray-300">draft</span>
+            <p>No quotations found.</p>
+        </div>
+    </div>
+</div>

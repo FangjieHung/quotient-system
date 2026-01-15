@@ -1,0 +1,57 @@
+<div class="container mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-3xl font-bold text-primaryText">Projects</h2>
+            <p class="text-gray-500 mt-1">Track progress and manage deliverables.</p>
+        </div>
+        <!-- Action button could be "Add Project" but usually projects come from quotations -->
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let project of projects"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow cursor-pointer group"
+            [routerLink]="['/projects', project.id]">
+            <div class="flex justify-between items-start mb-4">
+                <div
+                    class="w-12 h-12 rounded-xl bg-sidebar/10 text-sidebar flex items-center justify-center font-bold text-xl">
+                    {{ project.clientName.charAt(0) }}
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-bold" [ngClass]="{
+                        'bg-blue-50 text-blue-600': project.status === 'In Progress',
+                        'bg-green-50 text-green-600': project.status === 'Completed',
+                        'bg-yellow-50 text-yellow-600': project.status === 'On Hold',
+                        'bg-red-50 text-red-500': project.status === 'Cancelled'
+                    }">
+                    {{ project.status }}
+                </span>
+            </div>
+
+            <h3 class="text-xl font-bold text-primaryText mb-1 group-hover:text-sidebar transition-colors">{{
+                project.title }}</h3>
+            <p class="text-sm text-gray-400 font-medium mb-6">{{ project.clientName }}</p>
+
+            <div class="mb-6">
+                <div class="flex justify-between text-xs font-bold text-gray-500 mb-2">
+                    <span>Progress</span>
+                    <span>{{ project.completionPercentage }}%</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                    <div class="bg-sidebar h-2 rounded-full transition-all duration-500"
+                        [style.width.%]="project.completionPercentage"></div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                <div class="text-xs text-gray-400">
+                    <p class="font-bold">Start Date</p>
+                    <p>{{ project.startDate | date:'mediumDate' }}</p>
+                </div>
+                <div class="text-xs text-gray-400 text-right">
+                    <p class="font-bold">Budget</p>
+                    <p class="text-primaryText font-bold">{{ project.budget | currency }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

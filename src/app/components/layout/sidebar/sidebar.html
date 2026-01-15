@@ -1,0 +1,52 @@
+<div class="h-full flex flex-col p-6 bg-sidebar text-white">
+    <!-- Logo/Brand -->
+    <div class="mb-10 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-sidebar font-bold text-xl">
+            Q
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight">Quotient</h1>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 space-y-2">
+        <a routerLink="/quotations" routerLinkActive="bg-white/10 text-accent" 
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-white/5 group text-sm font-medium">
+            <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">description</span>
+            Quotations
+        </a>
+
+        <a routerLink="/projects" routerLinkActive="bg-white/10 text-accent"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-white/5 group text-sm font-medium">
+            <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">folder</span>
+            Projects
+        </a>
+
+        <div class="pt-4 pb-2">
+             <div class="h-px bg-white/20 w-full mb-4"></div>
+             <span class="text-xs uppercase tracking-wider text-white/50 px-4 font-bold">Financials</span>
+        </div>
+
+        <a routerLink="/financials/payment-slip" routerLinkActive="bg-white/10 text-accent"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-white/5 group text-sm font-medium">
+            <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">receipt_long</span>
+            Payment Slips
+        </a>
+
+        <a routerLink="/financials/invoice" routerLinkActive="bg-white/10 text-accent"
+           class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-white/5 group text-sm font-medium">
+            <span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">request_quote</span>
+            Invoices
+        </a>
+    </nav>
+
+    <!-- User Profile (Static) -->
+    <div class="mt-auto pt-6 border-t border-white/10 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+             <span class="material-symbols-outlined">person</span>
+        </div>
+        <div>
+            <p class="text-sm font-bold">Admin User</p>
+            <p class="text-xs text-white/60">admin@quotient.com</p>
+        </div>
+    </div>
+</div>

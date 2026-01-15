@@ -1,0 +1,13 @@
+<div class="flex h-screen bg-background text-primaryText font-sans overflow-hidden">
+    <!-- Sidebar -->
+    <app-sidebar class="w-64 flex-shrink-0 bg-sidebar text-white shadow-lg z-10"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto relative p-8">
+        <!-- Decorative geometric elements -->
+        <div class="absolute top-10 right-10 w-32 h-32 rounded-full border-4 border-accent opacity-20 pointer-events-none"></div>
+        <div class="absolute bottom-20 left-20 w-16 h-16 bg-accent rounded-full opacity-10 pointer-events-none"></div>
+
+        <router-outlet></router-outlet>
+    </main>
+</div>
