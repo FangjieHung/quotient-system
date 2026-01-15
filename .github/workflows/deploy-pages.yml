@@ -39,16 +39,14 @@ jobs:
             --deploy-url "/quotient-system/" \
             --output-path dist/quotient-system/browser
 
-      # 放入 SPA 404 重導，避免子路徑重新整理 404
-      - name: Add SPA 404 redirect
+      - name: Make 404 serve the SPA shell
         run: |
-          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; URL=./index.html"></head><body></body></html>' \
-            > dist/quotient-system/browser/404.html
+          cp dist/quotient-system/browser/index.html dist/quotient-system/browser/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/quotient-system/browser # ✅ 寫死為存在的資料夾
+          path: dist/quotient-system/browser
 
   deploy:
     environment:
